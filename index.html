@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Boarding Pass</title>
+<style>
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; background:#e9e9e9;
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Helvetica Neue", Arial, sans-serif; padding:16px;
+  }
+  /* Keeps the image's exact aspect ratio (2000 x 864) so the
+     fields stay aligned on any screen size. */
+  .pass {
+    position:relative; width:100%; max-width:1400px;
+    aspect-ratio:2000/864;
+    background:url("boardingpass.jpg") center/100% 100% no-repeat;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+    container-type:inline-size;
+  }
+  .field {
+    position:absolute; border:0; background:transparent;
+    font:700 1.6cqw "Helvetica Neue", Arial, sans-serif;
+    color:#333; letter-spacing:.05em; text-transform:uppercase;
+    padding:0 1.2cqw; outline:none;
+  }
+  .field:focus { background:rgba(200,16,30,.05); }
+  /* Positions measured in % of the image */
+  #ziel  { left:4.25%;  top:64.2%; width:34.7%; height:7.6%; }
+  #datum { left:42.65%; top:64.2%; width:15.5%; height:7.6%; }
+  #board {
+    position:absolute; left:77.5%; top:73.96%; width:19.2%; height:7.45%;
+    background:transparent; border:0; cursor:pointer;
+  }
+  #board:hover { background:rgba(0,0,0,.12); }
+  #msg {
+    position:absolute; left:3.8%; top:80.3%;
+    font-size:1.3cqw; font-weight:600; color:#c8101e;
+    background:#fff; padding:.3cqw .6cqw; display:none;
+  }
+</style>
+</head>
+<body>
+  <form class="pass" id="f" autocomplete="off">
+    <input class="field" id="ziel"  type="text" aria-label="Reiseziel" spellcheck="false">
+    <input class="field" id="datum" type="text" aria-label="Datum" spellcheck="false">
+    <button id="board" type="submit" aria-label="Board"></button>
+    <div id="msg"></div>
+  </form>
+
+<script>
+/* ---------------------------------------------------------------
+   SETTINGS - edit only these lines.
+   Matching ignores case, spaces, dots, dashes and slashes, so
+   "18.12.2026", "18/12/2026" and "18 12 2026" all count.
+---------------------------------------------------------------- */
+const ZIEL_CODES  = ["paris"];
+const DATUM_CODES = ["18122026", "181226"];
+const ZIELSEITE   = "ziel-8f3a2c.html";
+/* -------------------------------------------------------------- */
+
+const norm = s => s.toLowerCase().replace(/[\s.\-\/]/g, "");
+const msg = document.getElementById("msg");
+
+document.getElementById("f").addEventListener("submit", e => {
+  e.preventDefault();
+  const z = norm(document.getElementById("ziel").value);
+  const d = norm(document.getElementById("datum").value);
+  if (ZIEL_CODES.map(norm).includes(z) && DATUM_CODES.map(norm).includes(d)) {
+    window.location.href = ZIELSEITE;
+  } else {
+    msg.textContent = "Boarding verweigert – Ziel oder Datum stimmt noch nicht.";
+    msg.style.display = "block";
+  }
+});
+</script>
+</body>
+</html>
